@@ -48,6 +48,7 @@ fs.readdir(codeFolderPath, function(err, _folderNameList) {
 				}) 
 				countResult[folder_name] = codeLineCount;
 				console.log(countResult);
+				console.log(JSON.stringify(countResult));
 			});
 
 		});
