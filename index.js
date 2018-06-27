@@ -32,67 +32,96 @@ console.log('Server running at http://127.0.0.1:8888/');
 
 let codeFolderPath = '/Users/openopen/Desktop/code/';
 //scan folder and rename folder name
-fs.readdir(codeFolderPath, function(err, _folderNameList) {
-		console.log(_folderNameList);
+// fs.readdir(codeFolderPath, function(err, _folderNameList) { 
+// 		_.forEach(_folderNameList, function(folder_name) { 
+// 			let res = folder_name.substring(0, 9);
+// 			let originPath = codeFolderPath + folder_name;
+// 			let renamePath = codeFolderPath + folder_name.substring(0, 9);;
 
-		_.forEach(_folderNameList, function(folder_name) {
-			console.log(folder_name);
-			let res = folder_name.substring(0, 9);
-			let originPath = codeFolderPath + folder_name;
-			let renamePath = codeFolderPath + folder_name.substring(0, 9);;
+// 			fs.rename(originPath , renamePath, function (err) {
+// 				if (err) throw err;
+// 				console.log('renamed complete');
+// 			});
+// 		});
+// });
 
-			fs.rename(originPath , renamePath, function (err) {
-				if (err) throw err;
-				console.log('renamed complete');
+let countResult = [];
+
+fs.readdir(codeFolderPath, function(err, _folderNameList) { 
+		_.forEach(_folderNameList, function(folder_name) { 
+			let targetDir = [];
+
+			//target Project
+			targetDir = codeFolderPath + folder_name + '/';
+			fs.readdir(targetDir, function(err, files) { 
+				// filter pas files to pasFileList
+				pasFileList = _.filter(files, function(filename) { return filename.includes(".pas");});
+				console.log(targetDir + " === pasFileList ===");
+				console.log(pasFileList);
+
+				let codeLineCount = 0;
+				_.forEach(pasFileList, function(pasFile) {
+					let fullPath = codeFolderPath + folder_name + '/'+ pasFile;
+					console.log("fullPath:" + fullPath);
+					let codeLine = readLine(fullPath);
+					console.log(pasFile + " codeLine:" + codeLine)
+					codeLineCount += codeLine;
+				})
+
+				console.log("=== " + folder_name + "Total: " + codeLineCount + "===");
+				let resultString = "";
+				resultString = "{" + folder_name + ":" + codeLineCount + "}";
+				console.log(resultString);
+				countResult.push(resultString);
+				console.log(countResult);
 			});
 		});
-
- 
 });
+
 
 //codeFolderPath
-projectNameList = ['YSPUB109R','YSPUB203F'];
-let countResult = [];
+// projectNameList = ['YSPUB109R','YSPUB203F'];
+// let countResult = [];
  
-_.forEach(projectNameList, function(projectName) {
-	console.log(projectName);
-	dirPath = codeFolderPath + projectName;
-	console.log(dirPath);
-	//read Dir
-	fs.readdir(dirPath, function(err, files) { 
-		// filter pas files
-		pasFileList = _.filter(files, function(filename) { return filename.includes(".pas");});
-		console.log(" === pasFileList ===");
-		console.log(pasFileList);
+// _.forEach(projectNameList, function(projectName) {
+// 	console.log(projectName);
+// 	dirPath = codeFolderPath + projectName;
+// 	console.log(dirPath);
+// 	//read Dir
+// 	fs.readdir(dirPath, function(err, files) { 
+// 		// filter pas files
+// 		pasFileList = _.filter(files, function(filename) { return filename.includes(".pas");});
+// 		console.log(" === pasFileList ===");
+// 		console.log(pasFileList);
 
 
-		let codeLineCount = 0;
-		_.forEach(pasFileList, function(pasFile) {
-			let fullPath = codeFolderPath + projectName + '/'+ pasFile;
-			console.log("fullPath:" + fullPath);
-			let codeLine = readLine(fullPath);
-			console.log(pasFile + " codeLine:" + codeLine)
-			codeLineCount += codeLine;
-		})
+// 		let codeLineCount = 0;
+// 		_.forEach(pasFileList, function(pasFile) {
+// 			let fullPath = codeFolderPath + projectName + '/'+ pasFile;
+// 			console.log("fullPath:" + fullPath);
+// 			let codeLine = readLine(fullPath);
+// 			console.log(pasFile + " codeLine:" + codeLine)
+// 			codeLineCount += codeLine;
+// 		})
 
 
-		console.log("=== " + projectName + "Total: " + codeLineCount + "===");
-		console.log(countResult);
+// 		console.log("=== " + projectName + "Total: " + codeLineCount + "===");
+// 		console.log(countResult);
 
-		let resultString = "";
-		resultString = "{" + projectName + ":" + codeLineCount + "}";
-		console.log(resultString);
-		countResult.push(resultString);
-
-
+// 		let resultString = "";
+// 		resultString = "{" + projectName + ":" + codeLineCount + "}";
+// 		console.log(resultString);
+// 		countResult.push(resultString);
 
 
 
-	});
+
+
+// 	});
    
-});
-console.log("=================")
-console.log(countResult);
+// });
+// console.log("=================")
+// console.log(countResult);
  
 
 // targetList = ['/Users/openopen/Desktop/YSPUB109R/Unit1.pas','/Users/openopen/Desktop/YSPUB109R/Unit2.pas'];
@@ -125,8 +154,8 @@ function readLine(_path){
 }
 
 
-let aaa = readLine('/Users/openopen/Desktop/code/YSPUB109R/Unit1.pas' )
-console.log("**********"+aaa);
+// let aaa = readLine('/Users/openopen/Desktop/code/YSPUB109R/Unit1.pas' )
+// console.log("**********"+aaa);
 
  
 
@@ -138,11 +167,7 @@ console.log("**********"+aaa);
 //  	console.log(result);
 // });
 
-function inspectFile(contents) {
-    if (contents.indexOf('data-template="home"') != -1) {
-        // do something
-    }
-}
+ 
 //var res = str.substring(0, 9);
 
 // fs.rename('/Users/openopen/Desktop/readCodeLine2', '/Users/openopen/Desktop/readCodeLine3', function (err) {
