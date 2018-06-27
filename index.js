@@ -37,11 +37,12 @@ targetList = ['/Users/openopen/Desktop/YSPUB109R/Unit1.pas','/Users/openopen/Des
 codeLine = [];
 // const liner = new lineByLine('/Users/openopen/Desktop/YSPUB109R/Unit2.pas');
  
-_.forEach(targetList, function(value) {
-  console.log(value);
-  codeLine.push(read(value)); 
-});
-console.log(codeLine);
+// _.forEach(targetList, function(value) {
+//   console.log(value);
+//   codeLine.push(read(value)); 
+// });
+// console.log(codeLine);
+ 
 
 
 function read(_path){
@@ -59,6 +60,23 @@ function read(_path){
 	 // liner.close(); 
 	console.log('end of line reached');
 	return lineNumber;
+}
+
+
+ 
+
+fs.readdir('/Users/openopen/Desktop/YSPUB109R/', function(err, files) {
+//     files.filter(function(file) { return file.substr(-5) === '.html'; })
+//          .forEach(function(file) { fs.readFile(file, 'utf-8', function(err, contents) { inspectFile(contents); }); });
+	console.log(files);
+	result = _.filter(files, function(filePath) { return filePath.includes(".pas");});
+ 	console.log(result);
+});
+
+function inspectFile(contents) {
+    if (contents.indexOf('data-template="home"') != -1) {
+        // do something
+    }
 }
 
  
