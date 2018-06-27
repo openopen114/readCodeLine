@@ -38,15 +38,12 @@ fs.readdir(codeFolderPath, function(err, _folderNameList) {
 			fs.readdir(targetDir, function(err, files) { 
 				// filter pas files to pasFileList
 				pasFileList = _.filter(files, function(filename) { return filename.includes(".pas");});
-				console.log(targetDir + " === pasFileList ===");
-				console.log(pasFileList);
-
+				 
 				let codeLineCount = 0;
 				_.forEach(pasFileList, function(pasFile) {
 					let fullPath = codeFolderPath + folder_name + '/'+ pasFile;
-					console.log("fullPath:" + fullPath);
 					let codeLine = readLine(fullPath);
-					console.log(pasFile + " codeLine:" + codeLine)
+					console.log(folder_name + "/" +pasFile + " :" + codeLine)
 					codeLineCount += codeLine;
 				}) 
 				countResult[folder_name] = codeLineCount;
