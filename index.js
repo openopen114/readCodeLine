@@ -18,22 +18,84 @@ var curryN = require('lodash/fp/curryN');
 const lineByLine = require('./node_modules/n-readlines/readlines.js');
 
 
-http.createServer(function (request, response) {
 
-    // 发送 HTTP 头部 
-    // HTTP 状态值: 200 : OK
-    // 内容类型: text/plain
+var server = http.createServer(function (request, response) {
     response.writeHead(200, {'Content-Type': 'text/plain'});
-
-    // 发送响应数据 "Hello World"
     response.end('Hello World\n');
-}).listen(8888);
+})
+
+server.listen(8888);
 
 // 终端打印如下信息
 console.log('Server running at http://127.0.0.1:8888/');
 
 
-targetList = ['/Users/openopen/Desktop/YSPUB109R/Unit1.pas','/Users/openopen/Desktop/YSPUB109R/Unit2.pas'];
+let codeFolderPath = '/Users/openopen/Desktop/code/';
+//scan folder and rename folder name
+fs.readdir(codeFolderPath, function(err, _folderNameList) {
+		console.log(_folderNameList);
+
+		_.forEach(_folderNameList, function(folder_name) {
+			console.log(folder_name);
+			let res = folder_name.substring(0, 9);
+			let originPath = codeFolderPath + folder_name;
+			let renamePath = codeFolderPath + folder_name.substring(0, 9);;
+
+			fs.rename(originPath , renamePath, function (err) {
+				if (err) throw err;
+				console.log('renamed complete');
+			});
+		});
+
+ 
+});
+
+//codeFolderPath
+projectNameList = ['YSPUB109R','YSPUB203F'];
+let countResult = [];
+ 
+_.forEach(projectNameList, function(projectName) {
+	console.log(projectName);
+	dirPath = codeFolderPath + projectName;
+	console.log(dirPath);
+	//read Dir
+	fs.readdir(dirPath, function(err, files) { 
+		// filter pas files
+		pasFileList = _.filter(files, function(filename) { return filename.includes(".pas");});
+		console.log(" === pasFileList ===");
+		console.log(pasFileList);
+
+
+		let codeLineCount = 0;
+		_.forEach(pasFileList, function(pasFile) {
+			let fullPath = codeFolderPath + projectName + '/'+ pasFile;
+			console.log("fullPath:" + fullPath);
+			let codeLine = readLine(fullPath);
+			console.log(pasFile + " codeLine:" + codeLine)
+			codeLineCount += codeLine;
+		})
+
+
+		console.log("=== " + projectName + "Total: " + codeLineCount + "===");
+		console.log(countResult);
+
+		let resultString = "";
+		resultString = "{" + projectName + ":" + codeLineCount + "}";
+		console.log(resultString);
+		countResult.push(resultString);
+
+
+
+
+
+	});
+   
+});
+console.log("=================")
+console.log(countResult);
+ 
+
+// targetList = ['/Users/openopen/Desktop/YSPUB109R/Unit1.pas','/Users/openopen/Desktop/YSPUB109R/Unit2.pas'];
 codeLine = [];
 // const liner = new lineByLine('/Users/openopen/Desktop/YSPUB109R/Unit2.pas');
  
@@ -45,7 +107,7 @@ codeLine = [];
  
 
 
-function read(_path){
+function readLine(_path){
 	const liner = new lineByLine(_path);
  
 	let line;
@@ -63,20 +125,31 @@ function read(_path){
 }
 
 
+let aaa = readLine('/Users/openopen/Desktop/code/YSPUB109R/Unit1.pas' )
+console.log("**********"+aaa);
+
  
 
-fs.readdir('/Users/openopen/Desktop/YSPUB109R/', function(err, files) {
-//     files.filter(function(file) { return file.substr(-5) === '.html'; })
-//          .forEach(function(file) { fs.readFile(file, 'utf-8', function(err, contents) { inspectFile(contents); }); });
-	console.log(files);
-	result = _.filter(files, function(filePath) { return filePath.includes(".pas");});
- 	console.log(result);
-});
+// fs.readdir('/Users/openopen/Desktop/YSPUB109R/', function(err, files) {
+// //     files.filter(function(file) { return file.substr(-5) === '.html'; })
+// //          .forEach(function(file) { fs.readFile(file, 'utf-8', function(err, contents) { inspectFile(contents); }); });
+// 	console.log(files);
+// 	result = _.filter(files, function(filePath) { return filePath.includes(".pas");});
+//  	console.log(result);
+// });
 
 function inspectFile(contents) {
     if (contents.indexOf('data-template="home"') != -1) {
         // do something
     }
 }
+//var res = str.substring(0, 9);
 
+// fs.rename('/Users/openopen/Desktop/readCodeLine2', '/Users/openopen/Desktop/readCodeLine3', function (err) {
+//   if (err) throw err;
+//   console.log('renamed complete');
+// });
+
+
+server.close();
  
